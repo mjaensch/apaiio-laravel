@@ -61,16 +61,15 @@ class ApaiIOServiceProvider extends ServiceProvider
      */
     protected function setConfiguration($app)
     {
+        $client = new \GuzzleHttp\Client();
+        $request = new \ApaiIO\Request\GuzzleRequest($client);
         $config = $app['config']->get('apaiio');
         $conf = (new GenericConfiguration())
             ->setCountry($config['ENDPOINT'])
             ->setAccessKey($config['AWS_API_KEY'])
             ->setSecretKey($config['AWS_API_SECRET_KEY'])
-            ->setAssociateTag($config['AWS_ASSOCIATE_TAG']);
-
-        if (false === empty($config['REQUEST'])) {
-            $conf->setRequest($config['REQUEST']);
-        }
+            ->setAssociateTag($config['AWS_ASSOCIATE_TAG'])
+            ->setRequest($request);
 
         if (false === empty($config['RESPONSE'])) {
             $conf->setResponseTransformer($config['RESPONSE']);
